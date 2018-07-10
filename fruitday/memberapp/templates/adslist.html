@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地址列表</title>
+</head>
+<body>
+    {% for ads in adss %}
+        <div>
+            {{ ads.aname }}
+            {{ ads.ads }}
+            {{ ads.phone }}
+            <a href="{{ ads.get_delete_url }}">删除</a>
+        </div>
+    {% endfor %}
+</body>
+</html>

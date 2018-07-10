@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            首页
+        {% endblock %}
+    </title>
+</head>
+<body>
+
+    <div>
+    {% if request.session.user_name %}
+        欢迎您，{{ request.session.user_name }}
+        <a href="{% url 'logout' %}">退出</a>
+        <a href="{% url 'adslist' %}">地址列表</a>
+        <a href="{% url 'addads' %}">增加地址</a>
+        <a href="{% url 'cart' %}">购物车</a>
+    {% else %}
+        <a href="{% url 'login' %}">登录</a>
+        <a href="{% url 'register' %}">注册</a>
+    {% endif %}
+    </div>
+    {% block content %}
+    <div>
+    方法一:
+    水果:
+    {% for goods in good_list.fruit_goods %}
+        <div>
+            <a href="{{ goods.get_absolute_url }}">
+                {{ goods.title }}
+                {{ goods.price }}
+                {{ goods.unit }}
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+    <div>
+    方法二:
+    {% for t in good_list.types %}
+        <div>
+            {{ t.title }}
+        </div>
+        {% for g in good_list.goods %}
+            {% if t.title == g.type.title %}
+            <div>
+                <a href="{{ g.get_absolute_url }}">
+                    {{ g.title }}
+                    {{ g.price }}
+                    {{ g.unit }}
+                </a>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    </div>
+    <div>
+    方法三:
+    {% for m in good_list.ac %}
+        <div>
+            {{ m.type }}
+        </div>
+        {% for g in m.goods %}
+            <div><a href="{{ g.get_absolute_url }}">
+                {{ g.title }}
+                {{ g.price }}
+                {{ g.unit }}
+            </a></div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+    {% endblock %}
+</body>
+</html>

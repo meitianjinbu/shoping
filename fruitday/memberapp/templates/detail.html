@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>详情页</title>
+    {% load static %}
+    <script>
+
+        function add() {
+            var count = document.getElementById('gcount');
+            count.value++;
+        }
+        function minus() {
+            var count = document.getElementById('gcount');
+            if(count.value > 1){
+                count.value--;
+            }else{
+                count.value = 1;
+            }
+        }
+    </script>
+</head>
+<body>
+    {{ goods.title }}
+    {{ goods.price }}
+    {{ goods.desc }}
+    <div>
+        <form action="{% url 'addintocart' %}" method="get">
+            <button type="button" onclick="minus()">-</button>
+            <input type="hidden" value="{{ goods.id }}" name="goodsid">
+            <input type="number" value="1" name="gcount" id="gcount">
+            <button type="button" onclick="add()">+</button>
+            <input type="submit" value="加入购物车1">
+        </form>
+        <a onclick="addcart({{ goods.id }})">加入购物车2</a>
+    </div>
+    <script src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    <script type="text/javascript">
+        function addcart(goodsid) {
+            var count = document.getElementById('gcount');
+            $.ajax(
+                {
+                    url: '/cart/addintocart/',
+                    type: 'get',
+                    datatype: 'json',
+                    data: {
+                        'goodsid': goodsid,
+                        'gcount': count.value,
+                    },
+                    success: function (data) {
+                        location.href='/cart'
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                }
+            )
+        }
+    </script>
+</body>
+</html>

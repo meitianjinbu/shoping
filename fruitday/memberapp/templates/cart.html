@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    购物车
+{% endblock %}
+{% block content %}
+    <script src="{% static 'js/jquery-1.11.3.js' %}"></script>
+    {% for goods in find_goodss %}
+        <div>
+            <input type="checkbox" name="check" _i="{{ goods.id }}" _n="{{ goods.goods.title }}" _p="{{ goods.goods.price }}">
+            {{ goods.goods.title }}
+            <input type="text" value="{{ goods.ccount }}" name="cot">
+        </div>
+    {% endfor %}
+    <a onclick="caToor()">下订单</a>
+    <a onclick="delCart()">清空购物车</a>
+    <script type="text/javascript">
+        function caToor() {
+            var carts = [];
+            $.each($('input:checkbox:checked'), function () {
+                var cartg = {};
+                cartg['id'] = $(this).attr('_i');
+                cartg['name'] = $(this).attr('_n');
+                cartg['price'] = $(this).attr('_p');
+                cartg['count'] = $(this).next('input').attr('value');
+                carts.push(cartg);
+                console.log($(this).attr('_n'));
+                console.log($(this).next('input').attr('value'));
+            });
+            sessionStorage.setItem('acot', JSON.stringify(carts));
+            location.href = '/cart/order/';
+        }
+
+        function delCart() {
+            $.ajax({
+                url: '/cart/delcart/',
+                type: 'get',
+                datatype: 'json',
+                data: {},
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if(data['status'] == 'OK'){
+                        location.href = '/';
+                    }
+                },
+                error: function (err) {
+                }
+            })
+        }
+    </script>
+{% endblock %}
